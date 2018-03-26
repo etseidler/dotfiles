@@ -1,0 +1,19 @@
+{
+    "extends": "airbnb",
+    "rules": {
+        "semi": "off",
+        "eol-last": "off",
+        "object-curly-newline": [1, {
+            "ImportDeclaration": { "multiline": true, "minProperties": 3 },
+            "ObjectExpression": { "consistent": true }
+        }],
+        "brace-style": [1, "stroustrup"],
+        "react/jsx-filename-extension": "off",
+        "react/jsx-max-props-per-line": 3,
+        "react/prop-types": "ignore",
+        "react/jsx-first-prop-new-line": "off",
+        "jsx-a11y/no-static-element-interactions": "off",
+        "jsx-a11y/anchor-is-valid": "off",
+        "jsx-a11y/click-events-have-key-events": "off"
+    }
+}
