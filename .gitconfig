@@ -1,0 +1,44 @@
+[core]
+[user]
+	email = eric.seidler@gmail.com
+	name = Eric Seidler
+[push]
+	default = simple
+[alias]
+	ap = add -p
+	bd = branch -d
+	branches = branch -a
+	c = commit
+	ca = commit --amend
+	cf = commit --fixup
+	ci = commit
+	cia = commit --amend --no-edit
+	cm = commit -m
+	co = checkout
+	cop = checkout -p
+	cp = cherry-pick
+	cpc = cherry-pick --continue
+	dc = diff --cached
+	edit = !git reset --soft head^ && git reset .
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
+	p = push -u origin head
+        pf = push -fu origin head
+	rc = rebase --continue
+	remotes = remote -v
+	rhu = reset --hard @{upstream}
+	ro = !sh -c 'git rebase --onto $1 $2 $(git rev-parse --abbrev-ref HEAD)' -
+	rom = rebase origin/master
+	ri = rebase --interactive
+	sl = stash list
+	sp = stash pop
+	ss = stash
+	st = status -sb
+	tags = tag -l
+	watch = !watch -c git lg
+[diff]
+	algorithm = patience
+[pull]
+	rebase = true
+[pager]
+[rebase]
+	autosquash = true
