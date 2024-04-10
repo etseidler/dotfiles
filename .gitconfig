@@ -15,6 +15,11 @@
 	p = push -u origin HEAD
 	pf = p -f
 	rc = rebase --continue
+	predev = !sh -c 'git checkout dev && git pull && git checkout - && git rebase dev'
+	preman = !sh -c 'git checkout main && git pull && git checkout - && git rebase main'
+	reman = rebase main
+	redev = rebase dev
+        redeiv = rebase -i dev
 	reman = rebase main
 	remain = rebase -i main
 	remotes = remote -v
@@ -26,9 +31,16 @@
 	st = status -sb
 	tags = tag -l
 [diff]
+	tool = difftastic
 	wsErrorHighlight = all
+[difftool]
+        prompt = false
+[difftool "difftastic"]
+        cmd = difft "$LOCAL" "$REMOTE"
 [init]
 	defaultBranch = main
+[pager]
+	difftool = true
 [pull]
 	rebase = true
 [push]
@@ -38,3 +50,5 @@
 [user]
 	name = 
 	email = 
+[fetch]
+	prune = true
