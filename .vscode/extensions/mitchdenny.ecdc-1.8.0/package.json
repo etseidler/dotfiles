@@ -1,0 +1,103 @@
+{
+	"name": "ecdc",
+	"description": "An extension for Visual Studio Code that allows you to quickly convert text selections.",
+	"publisher": "mitchdenny",
+	"displayName": "Encode Decode",
+	"version": "1.8.0",
+	"keywords": [
+		"encode",
+		"decode",
+		"base64"
+	],
+	"icon": "ecdc.png",
+	"engines": {
+		"vscode": "^1.30.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"license": "Apache-2.0",
+	"bugs": {
+		"url": "https://github.com/mitchdenny/ecdc/issues"
+	},
+	"homepage": "https://github.com/mitchdenny/ecdc/blob/master/README.md",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mitchdenny/ecdc.git"
+	},
+	"activationEvents": [
+		"onCommand:extension.convertSelection",
+		"onCommand:extension.subtleConvertSelection"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.subtleConvertSelection",
+				"title": "Convert Selection"
+			},
+			{
+				"command": "extension.convertSelection",
+				"title": "Encode/Decode: Convert Selection"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "extension.convertSelection",
+				"key": "ctrl+alt-c",
+				"mac": "cmd+alt-c",
+				"when": "editorTextFocus"
+			}
+		],
+		"menus": {
+			"editor/context": [
+				{
+					"command": "extension.subtleConvertSelection",
+					"when": "editorHasSelection",
+					"group": "1_modification"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "extension.convertSelection",
+					"when": "editorHasSelection",
+					"group": "1_modification"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"@types/mocha": "^2.2.42",
+		"@types/node": "^8.10.48",
+		"tslint": "^5.16.0",
+		"typescript": "^3.4.5",
+		"vsce": "1.54.0",
+		"vscode": "^1.1.37"
+	},
+	"dependencies": {
+		"encode32": "^1.1.0",
+		"ent": "^2.2.0",
+		"entities": "^2.1.0",
+		"html-entities": "2.0.2",
+		"js-yaml": "^3.13.1",
+		"unicode-escape": "^0.1.0"
+	},
+	"__metadata": {
+		"id": "816d44eb-5e28-431b-be81-2c52551d81ea",
+		"publisherId": "3a32a336-2aa4-42a8-9f1b-51def6130383",
+		"publisherDisplayName": "Mitch Denny",
+		"targetPlatform": "undefined",
+		"updated": false,
+		"isPreReleaseVersion": false,
+		"installedTimestamp": 1690318758482,
+		"preRelease": false,
+		"size": 1065334
+	}
+}

@@ -1,0 +1,609 @@
+{
+	"name": "vscode-gitops-tools",
+	"displayName": "GitOps Tools for Flux",
+	"description": "GitOps automation tools for continuous delivery of Kubernetes and Cloud Native applications",
+	"version": "0.27.0",
+	"author": "Kingdon Barrett <kingdon@weave.works>",
+	"contributors": [
+		"Kingdon Barrett <kingdon@weave.works>",
+		"Juozas Gaigalas <juozasgaigalas@gmail.com>",
+		"Alexander <usernamehw@gmail.com>",
+		"Taras Novak <taras.novak@randomfractals.com>",
+		"Leonardo Murillo <leonardo@weave.works>"
+	],
+	"publisher": "weaveworks",
+	"icon": "resources/icons/gitops-logo.png",
+	"engines": {
+		"vscode": "^1.63.0",
+		"npm": ">=7.0.0"
+	},
+	"categories": [
+		"Azure",
+		"Other"
+	],
+	"keywords": [
+		"GitOps",
+		"kubernetes",
+		"flux",
+		"fluxcd",
+		"helm",
+		"Weave GitOps",
+		"Azure",
+		"Arc",
+		"AKS",
+		"devops"
+	],
+	"license": "MPL-2.0",
+	"readme": "README.md",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/weaveworks/vscode-gitops-tools"
+	},
+	"bugs": "https://github.com/weaveworks/vscode-gitops-tools/issues",
+	"homepage": "https://github.com/weaveworks/vscode-gitops-tools",
+	"main": "./dist/extension.js",
+	"scripts": {
+		"vscode:prepublish": "npm run package",
+		"compile": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"compile-tests": "tsc -p . --outDir out",
+		"watch-tests": "tsc -p . -w --outDir out",
+		"pretest": "npm run compile-tests && npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js",
+		"install:webview": "make -C ./webview-ui install",
+		"build:webview": "make -C ./webview-ui build"
+	},
+	"contributes": {
+		"commands": [
+			{
+				"command": "gitops.kubectl.setCurrentContext",
+				"title": "Set as Current Context",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.showInstalledVersions",
+				"title": "Show Installed Versions",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.installFluxCli",
+				"title": "Install Flux CLI",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.copyResourceName",
+				"title": "Copy Name",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.setClusterProvider",
+				"title": "Set Cluster Provider",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.flux.check",
+				"title": "Show Cluster Info",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.suspend",
+				"title": "Suspend",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.resume",
+				"title": "Resume",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.flux.checkPrerequisites",
+				"title": "Flux Check Prerequisites",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.flux.install",
+				"title": "Enable GitOps",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.flux.uninstall",
+				"title": "Disable GitOps",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.flux.reconcileSource",
+				"title": "Reconcile",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.flux.reconcileRepository",
+				"title": "Reconcile GitRepository for Path",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.flux.reconcileWorkload",
+				"title": "Reconcile",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.flux.trace",
+				"title": "Trace",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.views.refreshAllTreeViews",
+				"title": "Refresh",
+				"category": "GitOps",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "gitops.views.refreshResourcesTreeView",
+				"title": "Refresh Resources Views",
+				"category": "GitOps",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "gitops.views.pullGitRepository",
+				"title": "Clone Git Repository...",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.views.createGitRepository",
+				"title": "Create GitRepository from Path",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.createKustomization",
+				"title": "Create Kustomization from Path",
+				"icon": "$(add)",
+				"enablement": "!gitops:noClusterSelected && !gitops:currentClusterGitOpsNotEnabled",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.addSource",
+				"title": "Add Source",
+				"category": "GitOps",
+				"icon": "$(add)",
+				"enablement": "!gitops:noClusterSelected && !gitops:currentClusterGitOpsNotEnabled"
+			},
+			{
+				"command": "gitops.addKustomization",
+				"title": "Add Kustomization",
+				"category": "GitOps",
+				"icon": "$(add)",
+				"enablement": "!gitops:noClusterSelected && !gitops:currentClusterGitOpsNotEnabled"
+			},
+			{
+				"command": "gitops.views.deleteWorkload",
+				"title": "Delete",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.views.deleteSource",
+				"title": "Delete",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.views.showWorkloadsHelpMessage",
+				"title": "Workloads include Helm Releases and Kustomizations, as well as a tree of all other objects created by them",
+				"category": "GitOps",
+				"icon": "$(question)"
+			},
+			{
+				"command": "gitops.views.showNewUserGuide",
+				"title": "New User Guide",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.editor.openResource",
+				"title": "View Config",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.output.show",
+				"title": "Show Output",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.editor.showLogs",
+				"title": "Show Logs",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.dev.showGlobalState",
+				"title": "Show Global State",
+				"category": "GitOps"
+			},
+			{
+				"command": "gitops.views.createFromTemplate",
+				"title": "Create from Template",
+				"category": "GitOps"
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "gitops",
+					"title": "GitOps",
+					"icon": "resources/icons/gitops-logo.png"
+				}
+			]
+		},
+		"views": {
+			"gitops": [
+				{
+					"id": "gitops.views.clusters",
+					"name": "Clusters"
+				},
+				{
+					"id": "gitops.views.sources",
+					"name": "Sources"
+				},
+				{
+					"id": "gitops.views.workloads",
+					"name": "Workloads"
+				},
+				{
+					"id": "gitops.views.templates",
+					"name": "Templates",
+					"when": "config.gitops.weaveGitopsEnterprise"
+				},
+				{
+					"id": "gitops.views.documentation",
+					"name": "Documentation"
+				}
+			]
+		},
+		"configuration": {
+			"title": "GitOps Tools",
+			"properties": {
+				"gitops.weaveGitopsEnterprise": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enable WGE GitOpsTemplates feature"
+				}
+			}
+		},
+		"viewsWelcome": [
+			{
+				"view": "gitops.views.clusters",
+				"contents": "Loading Clusters ...",
+				"when": "gitops:loadingClusters"
+			},
+			{
+				"view": "gitops.views.clusters",
+				"contents": "No clusters.",
+				"when": "!gitops:loadingClusters && gitops:noClusters"
+			},
+			{
+				"view": "gitops.views.clusters",
+				"contents": "Failed to load cluster contexts.",
+				"when": "!gitops:loadingClusters && gitops:failedToLoadClusterContexts"
+			},
+			{
+				"view": "gitops.views.sources",
+				"contents": "[Enable GitOps](command:gitops.flux.install) for the selected Cluster to view Sources.",
+				"when": "gitops:currentClusterGitOpsNotEnabled && !gitops:noClusterSelected"
+			},
+			{
+				"view": "gitops.views.sources",
+				"contents": "Loading Sources ...",
+				"when": "gitops:loadingSources && !gitops:noClusterSelected && !gitops:currentClusterGitOpsNotEnabled"
+			},
+			{
+				"view": "gitops.views.sources",
+				"contents": "No sources.",
+				"when": "!gitops:loadingSources && !gitops:currentClusterGitOpsNotEnabled && !gitops:noClusterSelected && gitops:noSources"
+			},
+			{
+				"view": "gitops.views.sources",
+				"contents": "Select GitOps Cluster to view Sources.",
+				"when": "gitops:noClusterSelected"
+			},
+			{
+				"view": "gitops.views.workloads",
+				"contents": "[Enable GitOps](command:gitops.flux.install) for the selected Cluster to view Workloads.",
+				"when": "gitops:currentClusterGitOpsNotEnabled"
+			},
+			{
+				"view": "gitops.views.workloads",
+				"contents": "Loading Workloads ...",
+				"when": "gitops:loadingWorkloads && !gitops:noClusterSelected && !gitops:currentClusterGitOpsNotEnabled"
+			},
+			{
+				"view": "gitops.views.workloads",
+				"contents": "No workloads.",
+				"when": "!gitops:loadingWorkloads && !gitops:currentClusterGitOpsNotEnabled && !gitops:noClusterSelected && gitops:noWorkloads"
+			},
+			{
+				"view": "gitops.views.workloads",
+				"contents": "Select GitOps Cluster to view Workloads.",
+				"when": "gitops:noClusterSelected"
+			},
+			{
+				"view": "gitops.views.documentation",
+				"contents": "Loading Topics ..."
+			}
+		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "gitops.views.refreshAllTreeViews",
+					"group": "navigation",
+					"when": "view == gitops.views.clusters"
+				},
+				{
+					"command": "extension.vsKubernetesUseKubeconfig",
+					"group": "1",
+					"when": "view == gitops.views.clusters"
+				},
+				{
+					"command": "gitops.addSource",
+					"group": "navigation@0",
+					"when": "view == gitops.views.sources"
+				},
+				{
+					"command": "gitops.addKustomization",
+					"group": "navigation@0",
+					"when": "view == gitops.views.workloads"
+				},
+				{
+					"command": "gitops.views.refreshResourcesTreeView",
+					"group": "navigation@1",
+					"when": "view == gitops.views.sources"
+				},
+				{
+					"command": "gitops.views.refreshResourcesTreeView",
+					"group": "navigation@1",
+					"when": "view == gitops.views.workloads"
+				},
+				{
+					"command": "gitops.views.refreshResourcesTreeView",
+					"group": "navigation@1",
+					"when": "view == gitops.views.templates"
+				},
+				{
+					"command": "gitops.views.showWorkloadsHelpMessage",
+					"group": "navigation@2",
+					"when": "view == gitops.views.workloads"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "gitops.kubectl.setCurrentContext",
+					"when": "view == gitops.views.clusters && viewItem =~ /cluster;/ && viewItem =~ /notCurrentCluster;/",
+					"group": "0@1"
+				},
+				{
+					"command": "gitops.flux.install",
+					"when": "view == gitops.views.clusters && viewItem =~ /clusterGitOpsNotEnabled;/",
+					"group": "0@2"
+				},
+				{
+					"command": "gitops.flux.uninstall",
+					"when": "view == gitops.views.clusters && viewItem =~ /clusterGitOpsEnabled;/",
+					"group": "0@2"
+				},
+				{
+					"command": "gitops.flux.check",
+					"when": "view == gitops.views.clusters && viewItem =~ /cluster;/",
+					"group": "0@3"
+				},
+				{
+					"command": "gitops.setClusterProvider",
+					"when": "view == gitops.views.clusters && viewItem =~ /cluster;/",
+					"group": "0@4"
+				},
+				{
+					"command": "gitops.flux.reconcileSource",
+					"when": "view == gitops.views.sources && viewItem =~ /(GitRepository;|OCIRepository;|HelmRepository;|Bucket;)/",
+					"group": "navigation@0"
+				},
+				{
+					"command": "gitops.flux.reconcileWorkload",
+					"when": "view == gitops.views.workloads && viewItem =~ /(Kustomization;|HelmRelease;)/",
+					"group": "navigation@0"
+				},
+				{
+					"command": "gitops.suspend",
+					"when": "view =~ /(gitops.views.sources|gitops.views.workloads)/ && viewItem =~ /(GitRepository;|OCIRepository;|Kustomization;|HelmRelease;|HelmRepository;)/ && viewItem =~ /notSuspend;/",
+					"group": "navigation@1"
+				},
+				{
+					"command": "gitops.resume",
+					"when": "view =~ /(gitops.views.sources|gitops.views.workloads)/ && viewItem =~ /(GitRepository;|OCIRepository;|Kustomization;|HelmRelease;|HelmRepository;)/ && viewItem =~ /suspend;/",
+					"group": "navigation@1"
+				},
+				{
+					"command": "gitops.views.deleteWorkload",
+					"when": "view == gitops.views.workloads && viewItem =~ /(Kustomization;|HelmRelease;)/",
+					"group": "navigation@2"
+				},
+				{
+					"command": "gitops.views.deleteSource",
+					"when": "view == gitops.views.sources && viewItem =~ /(GitRepository;|OCIRepository;|HelmRepository;|Bucket;)/",
+					"group": "navigation@2"
+				},
+				{
+					"command": "gitops.views.pullGitRepository",
+					"when": "view == gitops.views.sources && viewItem =~ /GitRepository;/",
+					"group": "navigation@3"
+				},
+				{
+					"command": "gitops.addKustomization",
+					"when": "view == gitops.views.sources && viewItem =~ /GitRepository;|OCIRepository;|Bucket;/",
+					"group": "navigation@3"
+				},
+				{
+					"command": "gitops.editor.showLogs",
+					"when": "view =~ /^(gitops.views.clusters)$/ && viewItem =~ /(Deployment;)/"
+				},
+				{
+					"command": "gitops.copyResourceName",
+					"when": "view =~ /^(gitops.views.sources|gitops.views.workloads)$/",
+					"group": "navigation@9"
+				},
+				{
+					"command": "gitops.flux.trace",
+					"when": "view == gitops.views.workloads && viewItem != Namespace;",
+					"group": "navigation@4"
+				},
+				{
+					"command": "gitops.views.createFromTemplate",
+					"group": "1",
+					"when": "view == gitops.views.templates"
+				}
+			],
+			"explorer/context": [
+				{
+					"command": "gitops.views.createGitRepository"
+				},
+				{
+					"command": "gitops.flux.reconcileRepository"
+				},
+				{
+					"command": "gitops.createKustomization"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "gitops.editor.openResource",
+					"when": "never"
+				},
+				{
+					"command": "gitops.suspend",
+					"when": "never"
+				},
+				{
+					"command": "gitops.resume",
+					"when": "never"
+				},
+				{
+					"command": "gitops.flux.check",
+					"when": "never"
+				},
+				{
+					"command": "gitops.flux.install",
+					"when": "never"
+				},
+				{
+					"command": "gitops.flux.uninstall",
+					"when": "never"
+				},
+				{
+					"command": "gitops.flux.reconcileSource",
+					"when": "never"
+				},
+				{
+					"command": "gitops.flux.reconcileWorkload",
+					"when": "never"
+				},
+				{
+					"command": "gitops.editor.showLogs",
+					"when": "never"
+				},
+				{
+					"command": "gitops.views.pullGitRepository",
+					"when": "never"
+				},
+				{
+					"command": "gitops.views.deleteWorkload",
+					"when": "never"
+				},
+				{
+					"command": "gitops.views.deleteSource",
+					"when": "never"
+				},
+				{
+					"command": "gitops.flux.reconcileRepository",
+					"when": "never"
+				},
+				{
+					"command": "gitops.setClusterProvider",
+					"when": "never"
+				},
+				{
+					"command": "gitops.copyResourceName",
+					"when": "never"
+				},
+				{
+					"command": "gitops.views.showWorkloadsHelpMessage",
+					"when": "never"
+				},
+				{
+					"command": "gitops.flux.trace",
+					"when": "never"
+				},
+				{
+					"command": "gitops.kubectl.setCurrentContext",
+					"when": "never"
+				},
+				{
+					"command": "gitops.installFluxCli",
+					"when": "gitops:isDev"
+				},
+				{
+					"command": "gitops.dev.showGlobalState",
+					"when": "gitops:isDev"
+				}
+			]
+		}
+	},
+	"extensionDependencies": [
+		"ms-kubernetes-tools.vscode-kubernetes-tools"
+	],
+	"devDependencies": {
+		"@types/git-url-parse": "^9.0.1",
+		"@types/mocha": "^9.1.0",
+		"@types/node": "14.x",
+		"@types/semver": "^7.3.9",
+		"@types/shelljs": "^0.8.11",
+		"@types/uuid": "^9.0.1",
+		"@types/vscode": "^1.59.0",
+		"@types/vscode-webview": "^1.57.0",
+		"@types/which": "^2.0.1",
+		"@typescript-eslint/eslint-plugin": "^5.10.1",
+		"@typescript-eslint/parser": "^5.10.1",
+		"@vscode/test-electron": "^2.1.3",
+		"eslint": "^8.11.0",
+		"glob": "^7.2.0",
+		"mocha": "^9.2.2",
+		"ts-loader": "^9.2.8",
+		"typescript": "^4.5.5",
+		"webpack": "^5.70.0",
+		"webpack-cli": "^4.9.2"
+	},
+	"dependencies": {
+		"@kubernetes/client-node": "^0.16.2",
+		"@vscode/extension-telemetry": "^0.4.7",
+		"change-case": "^4.1.2",
+		"extract-zip": "^2.0.1",
+		"git-url-parse": "^13.0.0",
+		"jose": ">=2.0.6",
+		"parse-path": ">=5.0.0",
+		"parse-url": ">=8.1.0",
+		"semver": "^7.3.5",
+		"shell-escape-tag": "^2.0.2",
+		"shelljs": "^0.8.5",
+		"tinytim": "^0.1.1",
+		"uuid": "^9.0.0",
+		"vscode-kubernetes-tools-api": "^1.3.0"
+	},
+	"activationEvents": [],
+	"__metadata": {
+		"id": "61a914ed-c714-4c42-a201-6008038286a4",
+		"publisherDisplayName": "Weaveworks",
+		"publisherId": "841ae62a-d9b3-410f-af81-c9228050ff71",
+		"isPreReleaseVersion": false,
+		"targetPlatform": "undefined",
+		"isApplicationScoped": false,
+		"hasPreReleaseVersion": false,
+		"installedTimestamp": 1732720627048,
+		"pinned": false,
+		"preRelease": false,
+		"source": "gallery",
+		"size": 13229763
+	}
+}

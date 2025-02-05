@@ -1,0 +1,33 @@
+on:
+  push:
+    tags:
+      - "v*"
+
+name: release
+
+permissions:
+  # Required to publish a release
+  contents: write
+  pull-requests: "read"
+
+jobs:
+  package:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - run: yarn
+
+      - run: npx vsce package
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          draft: true
+          files: |
+            *.vsix
