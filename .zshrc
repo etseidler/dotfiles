@@ -85,6 +85,7 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
+export SAVEHIST=1000000
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -151,18 +152,58 @@ export DOCKER_DEFAULT_PLATFORM=linux/amd64
 # 1password shell completion
 #eval "$(op completion zsh)"; compdef _op op
 
-## aliases
+## aliases, including tools: bat, direnv, ghq, gitui, docker
 alias awswhoami="aws sts get-caller-identity"
+alias cat=bat
+alias da="direnv allow"
+alias dall=da
+alias dcls="docker container ls"
+alias dlogs="docker logs"
 alias dockermdk='docker stop $(docker ps -q) ; docker rm $(docker ps -aq) ; docker system prune -a --volumes -f; docker volume rm $(docker volume ls -q)'
 alias gi=gitui
+alias gg="ghq get"
+
+# kubectl stuff, including tools: kubie, k9s, kubectl-view-allocations
+alias cx="kubie ctx"
+alias icx="kubie info ctx"
 alias k=kubectl
+alias k9=k9s
 alias kd="kubectl describe pod"
 alias kl="kubectl logs"
 alias kp="kubectl get pods"
-alias cx=kubectx
-alias ns=kubens
+alias kv=kver
+alias kva=kubectl-view-allocations
+alias kver="kubectl version"
+alias kx=cx
+alias ikx=icx
+alias ns="kubie ns"
+alias ins="kubie info ns"
+
+# flux
+alias fgsa="flux get sources all"
+alias fgsg="flux get sources git"
+alias fgsh="flux get sources helm"
+alias fgsc="flux get sources chart"
+alias fgkz="flux get kustomizations"
+alias fghr="flux get helmreleases"
+alias fdkz="flux describe kustomization "
+alias fdhr="flux describe helmrelease "
+alias frsg="flux reconcile source git"
+alias frkz="flux reconcile kustomization"
+alias frhr="flux reconcile helmrelease"
+command -v flux >/dev/null && . <(flux completion zsh) # flux completion
+
+# Python
 alias pu="pip install --upgrade pip"
 alias venva="source ./venv/bin/activate"
+
+#Pre-Commit Alias
+alias pcra="pre-commit run --all-files"
+alias pcin="pre-commit install"
+
+# repo signing
+# alias setupsigned="git config user.name 'Eric Seidler' && git config user.email '<aidn email>' && git config commit.gpgsign true"
+# alias setupsignedwwt="git config user.name 'Eric Seidler' && git config user.email '<wwt email>' && git config commit.gpgsign true && git config user.signingkey ~/.ssh/id_ed25519.pub && git config gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers && git config gpg.format ssh"
 
 # TF stuff
 alias tf=terraform
@@ -170,8 +211,32 @@ alias tfap="terraform apply plan.tfplan"
 alias tfaro="terraform apply -refresh-only"
 alias tfd="terraform destroy"
 alias tff="terraform fmt -recursive"
-alias tfi="terraform init"
+alias tfin="terraform init"
+alias tfinr="terraform init -reconfigure"
+alias tfim="terraform import"
 alias tfp="terraform plan"
 alias tfpo="terraform plan -out=plan.tfplan"
 alias tfpov="terraform plan -out=plan.tfplan -var-file=variables.tfvars"
 alias tfup="terraform init --upgrade"
+# needed to set custom TF_PLUGIN_CACHE_DIR to replace default of /tmp which requires admin to run init
+# this may have been needed for a udacity project
+# export TF_CLI_CONFIG_FILE=$HOME/.terraformrc
+
+# auto-expand aliases? NOTE: i didn't really like using this
+# this can have small unexpected effects. only use when pairing and aliases are an issue.
+function expand-alias() {
+  zle _expand_alias
+  zle self-insert
+}
+# uncomment below to get this to work again
+#zle -N expand-alias
+#bindkey ' ' expand-alias
+
+# reading direnv
+eval "$(direnv hook zsh)"
+
+# mise
+# location of mise to beginning of path
+export PATH=~/.local/bin:$PATH
+# activate
+eval "$(mise activate)"
