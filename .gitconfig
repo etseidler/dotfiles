@@ -6,12 +6,15 @@
 	cf = commit --fixup
 	cia = commit --amend --no-edit --no-verify
 	cm = commit -m
+	cmnv = commit --no-verify -m
+	cmf = "cm 'fixup'"
 	co = checkout
 	cob = checkout -b
 	cop = checkout -p
 	cp = cherry-pick
 	cpc = cherry-pick --continue
-	dc = diff --cached
+	dft = difftool
+	dc = dft --cached
 	p = push -u origin HEAD
 	pf = p -f
 	rc = rebase --continue
@@ -27,7 +30,8 @@
 	ro = !sh -c 'git rebase --onto $1 $2 $(git rev-parse --abbrev-ref HEAD)' -
 	sl = stash list
 	sp = stash pop
-	ss = stash
+	# ss = stash
+	ss = rev-parse --short=6 HEAD
 	st = status -sb
 	tags = tag -l
 [diff]
@@ -52,3 +56,6 @@
 	email = 
 [fetch]
 	prune = true
+[ghq]
+	root = ~/Developer
+	vcs  = git
