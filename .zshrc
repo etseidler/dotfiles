@@ -169,6 +169,7 @@ alias icx="kubie info ctx"
 alias k=kubectl
 alias k9=k9s
 alias kd="kubectl describe pod"
+alias kga="kubectl api-resources --namespaced -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found -n"
 alias kl="kubectl logs"
 alias kp="kubectl get pods"
 alias kv=kver
