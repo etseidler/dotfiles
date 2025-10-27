@@ -111,11 +111,20 @@ export SAVEHIST=1000000
 
 ## [everything above is oh-my-zsh]
 
+# ## netskope fixes
+# ## NOTE: may not be needed? don't mess with it until problems arise
+# #export AWS_CA_BUNDLE=/Library/Application\ Support/Netskope/STAgent/data/netskope-cert-bundle.pem
+# export AWS_CA_BUNDLE=$(brew --prefix)/etc/ca-certificates/cert.pem
+# export CURL_CA_BUNDLE=/Library/Application\ Support/Netskope/STAgent/data/netskope-cert-bundle.pem
+# #export CURL_CA_BUNDLE=/Library/Application\ Support/Netskope/STAgent/data/nscacert_combined.pem
+# export SSL_CERT_FILE=/Library/Application\ Support/Netskope/STAgent/data/nscacert_combined.pem
+# export GIT_SSL_CAPATH=/Library/Application\ Support/Netskope/STAgent/data/netskope-cert-bundle.pem
+# export REQUESTS_CA_BUNDLE=/Library/Application\ Support/Netskope/STAgent/data/nscacert_combined.pem
 
 ## nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 ## pure zsh prompt
 #fpath+=("$(brew --prefix)/share/zsh/site-functions") # default zsh is /bin/zsh
@@ -126,12 +135,12 @@ export NVM_DIR="$HOME/.nvm"
 autoload -U zmv # for bulk move
 
 ## pyenv
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+# export PATH="$HOME/.pyenv/bin:$PATH"
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
 
 ## poetry
-export PATH=$PATH:~/.local/bin
+# export PATH=$PATH:~/.local/bin
 
 # openJDK 20 via homebrew
 #export JAVA_HOME=`/usr/libexec/java_home -v 20`
@@ -147,7 +156,7 @@ export PATH=$PATH:~/.local/bin
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # fix docker default platform on Mac Silicon? not sure how/when this works
-export DOCKER_DEFAULT_PLATFORM=linux/amd64
+# export DOCKER_DEFAULT_PLATFORM=linux/amd64
 
 # 1password shell completion
 #eval "$(op completion zsh)"; compdef _op op
@@ -162,6 +171,7 @@ alias dlogs="docker logs"
 alias dockermdk='docker stop $(docker ps -q) ; docker rm $(docker ps -aq) ; docker system prune -a --volumes -f; docker volume rm $(docker volume ls -q)'
 alias gi=gitui
 alias gg="ghq get"
+alias sshpkc="cat /Users/seidlere/.ssh/id_ed25519.pub | pbcopy"
 
 # kubectl stuff, including tools: kubie, k9s, kubectl-view-allocations
 alias cx="kubie ctx"
@@ -169,6 +179,8 @@ alias icx="kubie info ctx"
 alias k=kubectl
 alias k9=k9s
 alias kd="kubectl describe pod"
+alias kg="kubectl get --show-kind --ignore-not-found -n"
+alias kga="kubectl api-resources --namespaced -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found -n"
 alias kl="kubectl logs"
 alias kp="kubectl get pods"
 alias kv=kver
@@ -195,25 +207,29 @@ command -v flux >/dev/null && . <(flux completion zsh) # flux completion
 
 # Python
 alias pu="pip install --upgrade pip"
-alias venva="source ./venv/bin/activate"
+alias venva="source ./venv/bin/activate || source ./.venv/bin/activate"
+alias dea=deactivate
 
 #Pre-Commit Alias
 alias pcra="pre-commit run --all-files"
 alias pcin="pre-commit install"
 
 # repo signing
-# alias setupsigned="git config user.name 'Eric Seidler' && git config user.email '<aidn email>' && git config commit.gpgsign true"
-# alias setupsignedwwt="git config user.name 'Eric Seidler' && git config user.email '<wwt email>' && git config commit.gpgsign true && git config user.signingkey ~/.ssh/id_ed25519.pub && git config gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers && git config gpg.format ssh"
+# alias setupsigned="git config user.name 'Eric Seidler' && git config user.email '<work email>' && git config commit.gpgsign true"
+alias setupsigned="git config user.name 'Eric Seidler' && git config user.email '<work email>' && git config commit.gpgsign true && git config user.signingkey ~/.ssh/id_ed25519.pub && git config gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers && git config gpg.format ssh"
+# alias setuprepo="git config user.name 'Eric Seidler' && git config user.email '<work email>'"
 
 # TF stuff
 alias tf=terraform
 alias tfap="terraform apply plan.tfplan"
+alias tfapp="terraform apply plan.tfplan && git p"
 alias tfaro="terraform apply -refresh-only"
 alias tfd="terraform destroy"
 alias tff="terraform fmt -recursive"
+alias tfim="terraform init -migrate-state"
 alias tfin="terraform init"
 alias tfinr="terraform init -reconfigure"
-alias tfim="terraform import"
+alias tfimp="terraform import"
 alias tfp="terraform plan"
 alias tfpo="terraform plan -out=plan.tfplan"
 alias tfpov="terraform plan -out=plan.tfplan -var-file=variables.tfvars"
@@ -240,3 +256,6 @@ eval "$(direnv hook zsh)"
 export PATH=~/.local/bin:$PATH
 # activate
 eval "$(mise activate)"
+
+# gcloud cli
+# export PATH=$PATH:/Users/<username>/Downloads/google-cloud-sdk/bin
