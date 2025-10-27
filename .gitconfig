@@ -20,9 +20,8 @@
 	rc = rebase --continue
 	predev = !sh -c 'git checkout dev && git pull && git checkout - && git rebase dev'
 	preman = !sh -c 'git checkout main && git pull && git checkout - && git rebase main'
-	reman = rebase main
 	redev = rebase dev
-        redeiv = rebase -i dev
+	redeiv = rebase -i dev
 	reman = rebase main
 	remain = rebase -i main
 	remotes = remote -v
@@ -52,8 +51,8 @@
 [rebase]
 	autostash = true
 [user]
-	name = 
-	email = 
+	name =
+	email =
 [fetch]
 	prune = true
 [ghq]
