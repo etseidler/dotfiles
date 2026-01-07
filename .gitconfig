@@ -1,13 +1,16 @@
 [alias]
 	ap = add -p
+	ba = branch -a
 	bd = branch -d
-	branches = branch -a
 	ca = commit --amend
 	cf = commit --fixup
 	cia = commit --amend --no-edit --no-verify
+	cl = !sh -c 'git remote prune origin && git branch --all --merged main | grep -viE "main|HEAD" | xargs -r git branch -D'
+	cld = !sh -c 'git branch --all --merged main | grep -viE "main|HEAD"'
 	cm = commit -m
 	cmnv = commit --no-verify -m
 	cmf = "cm 'fixup'"
+	cmp = !sh -c 'git checkout main && git pull'
 	co = checkout
 	cob = checkout -b
 	cop = checkout -p
@@ -15,9 +18,12 @@
 	cpc = cherry-pick --continue
 	dft = difftool
 	dc = dft --cached
+	l = log --oneline -n 12
 	p = push -u origin HEAD
 	pf = p -f
 	rc = rebase --continue
+	rp = remote prune origin
+	rpd = remote prune --dry-run origin
 	predev = !sh -c 'git checkout dev && git pull && git checkout - && git rebase dev'
 	preman = !sh -c 'git checkout main && git pull && git checkout - && git rebase main'
 	redev = rebase dev
